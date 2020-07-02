@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
 
 class ClassCard extends StatelessWidget {
   String when;
@@ -58,18 +59,26 @@ class ClassCard extends StatelessWidget {
           ],
         ));
       }
-    return Card(
+    return GradientCard(
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: <Color>[
+              this.type == 'first'
+                  ? Colors.blue[500]
+                  : (this.type == 'second'
+                      ? Colors.cyan[600]
+                      : Colors.blueGrey[300]),
+              this.type == 'first'
+                  ? Colors.blue[600]
+                  : (this.type == 'second'
+                      ? Colors.cyan[700]
+                      : Colors.blueGrey[400])
+            ]),
         margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
-        color: this.type == 'first'
-            ? Colors.blue[600]
-            : (this.type == 'second' ? Colors.cyan[700] : Colors.blueGrey[400]),
         child: Column(children: <Widget>[
           Card(
-            color: this.type == 'first'
-                ? Colors.blue[500]
-                : (this.type == 'second'
-                    ? Colors.cyan[600]
-                    : Colors.blueGrey[300]),
+            color: Color.fromRGBO(255, 255, 255, 0.11),
             elevation: 0,
             margin: EdgeInsets.zero,
             child: Align(
