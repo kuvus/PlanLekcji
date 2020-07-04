@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
+import 'package:planlekcji/models/subject.dart';
+import 'package:planlekcji/models/teacher.dart';
 
 class ClassCard extends StatelessWidget {
-  String when;
-  String type;
-  List classes;
+  final String when;
+  final String type;
+  final List classes;
 
   ClassCard({this.when = 'Kiedyś', this.type = 'other', this.classes});
 
@@ -37,26 +39,42 @@ class ClassCard extends StatelessWidget {
     else
       for (int i = 0; i < classesCount; i++) {
         if (i > 0) widgets.add(Divider(color: Colors.grey[200]));
-        widgets.add(Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              this.classes[i]['hours'],
-              style: TextStyle(color: Colors.white, fontSize: 22),
-            ),
-            Column(
-              children: <Widget>[
-                Text(
-                  this.classes[i]['subject'],
+        widgets.add(Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Flexible(
+                child: Text(
+                  this.classes[i]['hours'],
                   style: TextStyle(color: Colors.white, fontSize: 25),
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
                 ),
-                Text(
-                  this.classes[i]['teacher'],
-                  style: TextStyle(color: Colors.white),
-                )
-              ],
-            )
-          ],
+              ),
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      this.classes[i]['subject'],
+                      style: TextStyle(color: Colors.white, fontSize: 28),
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                    ),
+                    Text(
+                      this.classes[i]['teacher'],
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ));
       }
     return GradientCard(
@@ -104,5 +122,90 @@ class ClassCard extends StatelessWidget {
                 children: widgets,
               ))
         ]));
+  }
+}
+
+class OptionCard extends StatelessWidget {
+  final String type;
+  final Teacher teacher;
+  final Subject subject;
+  final Function editAction;
+  final Function deleteAction;
+
+  OptionCard({this.type = 'other',
+    this.teacher,
+    this.subject,
+    this.editAction,
+    this.deleteAction});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        color: Colors.grey[200],
+        margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+        child: Container(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Flexible(
+                  child: Container(
+                    child: this.type == 'subject'
+                        ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          this.subject.toMap()['subject'],
+                          style: TextStyle(
+                              color: Colors.grey[900], fontSize: 28),
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                        ),
+                        Text(
+                          this.subject.toMap()['teacher'],
+                          style: TextStyle(
+                              color: Colors.grey[900], fontSize: 18),
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                        )
+                      ],
+                    )
+                        : (this.type == 'teacher'
+                        ? Text(
+                      this.teacher.toMap()['name'],
+                      style: TextStyle(
+                          color: Colors.grey[900], fontSize: 23),
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                    )
+                        : Text('')),
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: IconButton(
+                          icon: Icon(Icons.edit, color: Colors.grey[900]),
+                          onPressed: editAction,
+                        )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.grey[900]),
+                        onPressed: deleteAction,
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
